@@ -9,31 +9,6 @@ const message = require('../config.js');
 
 const marcaDAO = require('../model/DAO/marca.js');
 
-const getListarMarcas = async function () {
-
-    const marcaJSON = {}
-
-    let dadosMarca = await marcaDAO.selectAllMarca()
-
-    if (dadosMarca) {
-        if (dadosMarca.length > 0) {
-            marcaJSON.veiculo = dadosMarca
-            marcaJSON.quantidade = dadosMarca.length
-            marcaJSON.status_code = 200
-
-            return marcaJSON
-        }
-        else {
-            return message.ERROR_INTERNAL_SERVER_DB
-        }
-    }
-
-    else {
-        return message.ERROR_INTERNAL_SERVER
-    }
-
-}
-
 const getListarMarca = async function () {
 
     const marcaJSON = {}

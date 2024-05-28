@@ -216,6 +216,74 @@ app.put('/v1/estacionaMais/novaMarca/:id', cors(), bodyParserJSON, async functio
 
 })
 
+/******************************************ENDPOINTS DE VEICULO*************************/
+
+app.get('/v1/estacionaMais/listarVeiculos', cors(), async function(request, response){
+
+let resultDadosNovoVeiculo = await controllerVeiculo.getListarVeiculos()
+
+response.status(resultDadosNovoVeiculo.status_code)
+response.json(resultDadosNovoVeiculo)
+
+})
+app.get('/v1/estacionaMais/buscarIdVeiculo/:id', cors(), async function(request, response){
+
+let idV = request.params.id
+
+let resultDadosVeiculos = await controllerVeiculo.getBuscarIdVeiculo(idV)
+
+response.status(resultDadosVeiculos.status_code)
+response.json(resultDadosVeiculos)
+
+})
+
+app.post('/v1/estacioMais/novoVeiculo', cors(), bodyParserJSON, async function(request, response){
+
+    const contentType = request.header('content-type');
+    console.log(contentType);
+
+    // Recebe todos os dados encaminhados na requisição pelo body        
+    let dadosBody = request.body
+
+    let resultDadosNovoVeiculo= await controllerVeiculo.setInserirVeiculo(dadosBody, contentType);
+
+    console.log(resultDadosNovoVeiculo)
+    response.status(resultDadosNovoVeiculo.status_code)
+    response.json(resultDadosNovoVeiculo)
+
+
+})
+
+app.put('/v1/estacionaMais/updateVeiculo/:id', cors(), bodyParserJSON, async function(request, response){
+
+    let idV = request.params.id
+
+const contentType = request.header('content-type');
+console.log(contentType);
+
+// Recebe todos os dados encaminhados na requisição pelo body        
+let dadosBody = request.body
+
+let resultDadosNovoVeiculo= await controllerVeiculo.setAtualizarVeiculo(dadosBody, contentType, idV);
+
+console.log(resultDadosNovoVeiculo)
+response.status(resultDadosNovoVeiculo.status_code)
+response.json(resultDadosNovoVeiculo)
+
+})
+
+app.delete('/v1/estacionaMais/excluirVeiculo/:id', cors(), async function(request, response){
+
+let idV = request.params.id
+
+let resultDadosVeiculos = await controllerVeiculo.setExcluirVeiculo(id)
+
+console.log(resultDadosVeiculos);
+response.status(resultDadosVeiculos.status_code)
+response.json(resultDadosVeiculos)
+
+
+})
 //Ativação da porta 8080
 app.listen('8080', function(){
     console.log('API funcionando e aguardando requisições!!!');
