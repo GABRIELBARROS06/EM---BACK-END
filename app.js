@@ -24,6 +24,7 @@ const controllerTipoVeiculo = require('./controller/controller_tipoVeiculo.js')
 const controllerVaga = require('./controller/controller_vaga.js')
 const controllerVeiculo = require('./controller/controller_veiculo.js')
 const controller_marca = require('./controller/controller_marca.js')
+const controller_categoriaVaga = require('./controller/controller_categoriaVaga.js')
 /**************************************************************************************/
 
 //Criação do app
@@ -76,6 +77,7 @@ app.post('/v1/estacionaMais/cliente', cors(), bodyParserJSON, async function(req
 
 
 /****************************Endpoint de Tipo de Veiculos**************** */
+//Funcionando
 app.get('/v1/estacionaMais/tipoVeiculos', cors(), async function(request,response){
 
     let dadosVeiculo = await controllerTipoVeiculo.getListarTiposVeiculos()
@@ -86,6 +88,7 @@ app.get('/v1/estacionaMais/tipoVeiculos', cors(), async function(request,respons
     
     })
     
+    //Funcionando
     app.get('/v1/estacionaMais/tipoVeiculo', cors(), async function(request, response){
     
         let nomeVeiculo = request.query.tipo_veiculo
@@ -96,7 +99,7 @@ app.get('/v1/estacionaMais/tipoVeiculos', cors(), async function(request,respons
     response.json(dadosVeiculo)
     
     })
-    
+    //Funcinonando
     app.post('/v1/estacionaMais/novoTipoVeiculo', cors(), bodyParserJSON, async function(request, response){
     
         const contentType = request.header('content-type');
@@ -276,7 +279,7 @@ app.delete('/v1/estacionaMais/excluirVeiculo/:id', cors(), async function(reques
 
 let idV = request.params.id
 
-let resultDadosVeiculos = await controllerVeiculo.setExcluirVeiculo(id)
+let resultDadosVeiculos = await controllerVeiculo.setExcluirVeiculo(idV)
 
 console.log(resultDadosVeiculos);
 response.status(resultDadosVeiculos.status_code)
@@ -284,6 +287,117 @@ response.json(resultDadosVeiculos)
 
 
 })
+//get de cores
+app.get('/v1/estacionaMais/cores', cors(), async function (request, response) {
+
+    let dadosCores = await controllerCor.getListarCores()
+
+    response.status(dadosCores.status_code)
+    response.json(dadosCores)
+})
+
+//get de cores filtrando pelo id
+app.get('/v1/estacionaMais/cor/:id', cors(), async function (request, response) {
+    let id = request.params.id
+
+    let dadosCores = await controllerCor.getBuscarCor(id)
+
+    response.status(dadosCores.status_code)
+    response.json(dadosCores)
+})
+
+
+//post de cor
+app.post('/v1/estacionaMais/cor', cors(), bodyParserJSON, async function (request, response) {
+
+    const contentType = request.header('content-type')
+
+    // Recebe todos os dados encaminhados na requisição pelo body        
+    let dadosBody = request.body
+
+    let resultDadosNovaCor = await controllerCor.setInserirCor(dadosBody, contentType)
+
+    response.status(resultDadosNovaCor.status_code)
+    response.json(resultDadosNovaCor)
+})
+
+
+//delete de core
+app.delete('/v1/estacionaMais/cor/:id', cors(), async function (request, response) {
+    let idCor = request.params.id
+
+    let dadosCor = await controllerCor.setExcluirCor(idCor)
+
+    response.status(dadosCor.status_code)
+    response.json(dadosCor)
+})
+
+
+//put de cor
+app.put('/v1/estacionaMais/cor/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    const contentType = request.header('content-type')
+
+    let idCor = request.params.id
+
+    // Recebe todos os dados encaminhados na requisição pelo body        
+    let dadosBody = request.body
+
+    let resultDadosNovaCor = await controllerCor.setAtualizarCor(dadosBody, contentType, idCor);
+
+    response.status(resultDadosNovaCor.status_code)
+    response.json(resultDadosNovaCor)
+})
+
+
+/**********************************CRUD DE CATEGORIAS DE VAGAS*****************************************/
+app.get('/v1/estacionaMais/listarTipoVaga', cors(), async function(request, response){
+    let resultDadosTipoVagas = await controller_categoriaVaga.getListarTipoVaga()
+
+    console.log(resultDadosTipoVagas);
+    response.status(resultDadosTipoVagas.status_code)
+    response.json(resultDadosTipoVagas)    
+})
+
+app.get('/v1/estacionaMais/buscarTipoVeiculo/:id', cors(), async function(request, response){
+    let idV = request.params.id
+
+    let resultDadosTipoVagas = await controllerCategoriaVagas.getBuscarTipoVagaById(idV)
+
+    console.log(resultDadosTipoVagas)
+    response.status(resultDadosTipoVagas.status_code)
+    response.json(resultDadosTipoVagas)
+})
+//Problema de endpoint não encontrado
+app.post('/v1/estacionaMais/novoTipoVaga', cors(), bodyParserJSON, async function(request, response){
+
+    const contentType = request.headers['content-type'];
+    console.log(contentType);
+
+    // Recebe todos os dados encaminhados na requisição pelo body        
+    let dadosBody = request.body
+
+    let resultDadosNovoTipoVaga = await controllerCategoriaVagas.setInserirTipoVaga(dadosBody, contentType);
+
+    console.log(resultDadosNovoTipoVaga)
+    response.status(resultDadosNovoTipoVaga.status_code)
+    response.json(resultDadosNovoTipoVaga)
+
+
+})
+//Problema de endpoint não encontrado
+app.delete('/v1/estacionaMais/excluirTipoVaga/:id', cors(), async function(request, response){
+
+    let idV = request.params.id
+    
+    let resultDadosVagas = await controllerCategoriaVagas.setExcluirTipoVaga(idV)
+    
+    console.log(resultDadosVagas);
+    response.status(resultDadosVagas.status_code)
+    response.json(resultDadosVagas)
+    
+    
+    })
 //Ativação da porta 8080
 app.listen('8080', function(){
     console.log('API funcionando e aguardando requisições!!!');
